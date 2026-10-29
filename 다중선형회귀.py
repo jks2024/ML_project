@@ -26,4 +26,46 @@ poly = PolynomialFeatures(degree=5, include_bias=False) # 절편항 제거, 5차
 train_poly = poly.fit_transform(train_input)
 test_poly = poly.transform(test_input)
 
+# 선형 회귀 모델 훈련
+from sklearn.linear_model import LinearRegression
+lr = LinearRegression()
+lr.fit(train_poly, train_target)
+print(lr.score(train_poly, train_target))
+print(lr.score(test_poly, test_target))
+
+# 규제 적용(Regularization): 모델이 훈련 데이터에 지나치게 맞춰져 새로운 데이터에 대한 예측 성능이 떨어지는 과적합(Overfitting)을 방지하기 위한 핵심 기법
+# 릿지 규제: 릿지 규제는 제곱합을 사용하여 큰 계수를 억제
+# 라쏘 규제: 계수의 절댓값 합을 사용하며, 일부 계수를 0으로 만들어 특성 선택 기능도 제공
+
+from sklearn.preprocessing import StandardScaler
+ss = StandardScaler() # 데이터를 표준화하기 위해 사용
+ss.fit(train_poly)
+train_scaled = ss.transform(train_poly) # 훈련 데이어의 표준화된 결과가 저장
+test_scaled = ss.transform(test_poly)   # 테스트 데이터의 표준화된 결과가 저장
+
+# 릿지 회귀: 계수의 제곱합을 패널티로 적용, 모든 특정을 조금씩 줄이는 방식
+from sklearn.linear_model import Ridge
+ridge = Ridge(alpha=0.3)  # 클수록 규제 강함(과소 적합 우려). 작을 수록 규제 약함(과대적합 우려), 1이 기본값
+ridge.fit(train_scaled, train_target)
+print(ridge.score(train_scaled, train_target))
+print(ridge.score(test_scaled, test_target))
+
+# 라쏘 회귀: 계수의 제곱합을 패널티로 적용, 일부 계수를 0으로 만들어 특성 선택 효과 발생, 불필요한 특성은 자동 제거 됨
+from sklearn.linear_model import Lasso
+lasso = Lasso(alpha=10)
+lasso.fit(train_scaled, train_target)
+print(lasso.score(train_scaled, train_target))
+print(lasso.score(test_scaled, test_target))
+
+# K-NN 인접 회귀로 결과 확인 해보기
+from sklearn.neighbors import KNeighborsRegressor
+
+knr = KNeighborsRegressor(n_neighbors=5)
+knr.fit(train_scaled, train_target)
+
+print(f"훈련 세트의 점수: {knr.score(train_scaled, train_target):.4f}")
+print(f"테스트 세트의 점수: {knr.score(test_scaled, test_target):.4f}")
+
+
+
 
