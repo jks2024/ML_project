@@ -6,6 +6,7 @@ print(df.info())      # 데이터 타입에 대한 정보
 print(df.head())      # 상위 5명 정보
 print(df.describe())  # 통계적인 정보
 
+# 데이터 전처리
 
 
 
