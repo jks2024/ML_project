@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 타이타닉 생존 예측</title>
+    <style>
+        body { font-family: sans-serif; text-align: center; padding: 50px; }
+        .container { display: inline-block; text-align: left; border: 1px solid #ccc; padding: 20px; border-radius: 10px; }
+        .result { margin-top: 20px; font-weight: bold; color: blue; }
+    </style>
+</head>
+<body>
+    <h1>🚢 타이타닉 생존 확률 예측 서비스</h1>
+    <div class="container">
+        <form action="/predict" method="post">
+            <p>객실 등급: <select name="pclass"><option value="1">1등</option><option value="2">2등</option><option value="3">3등</option></select></p>
+            <p>나이: <input type="number" name="age" required></p>
+            <p>가족(형제/배우자): <input type="number" name="sibsp" value="0"></p>
+            <p>가족(부모/자녀): <input type="number" name="parch" value="0"></p>
+            <p>성별: <input type="radio" name="sex" value="1" checked> 남성 <input type="radio" name="sex" value="0"> 여성</p>
+            <p>탑승지(Q): <input type="checkbox" name="embarked_q" value="1"> 탑승지(S): <input type="checkbox" name="embarked_s" value="1"></p>
+            <button type="submit">생존 확률 계산</button>
+        </form>
+
+        {% if prob is defined %}
+        <div class="result">
+            <p>결과: 당신의 생존 확률은 {{ prob }}% 입니다. (사망 확률: {{ death }}%)</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
